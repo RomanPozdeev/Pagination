@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Pagination</string>
+    <string name="empty_list">Empty list</string>
+    <string name="error">Some went wrong</string>
+    <string name="retry">Retry</string>
+    <string name="network_error">Network error</string>
+</resources>
