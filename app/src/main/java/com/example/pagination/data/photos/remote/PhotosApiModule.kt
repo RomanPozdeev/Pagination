@@ -1,7 +1,6 @@
 package com.example.pagination.data.photos.remote
 
 import com.example.pagination.BuildConfig
-import com.example.pagination.common.SchedulersProvider
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
@@ -15,11 +14,11 @@ import javax.inject.Singleton
 class PhotosApiModule {
     @Provides
     @Singleton
-    fun provideApi(httpClient: Lazy<OkHttpClient>, schedulers: SchedulersProvider): PhotosApi {
+    fun provideApi(httpClient: Lazy<OkHttpClient>): PhotosApi {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .callFactory { httpClient.get().newCall(it) }
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(schedulers.io()))
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(PhotosApi::class.java)

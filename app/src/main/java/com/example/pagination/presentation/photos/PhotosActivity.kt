@@ -29,6 +29,7 @@ class PhotosActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        items.hasFixedSize()
         items.adapter = PhotosAdapter()
         items.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
@@ -49,7 +50,7 @@ class PhotosActivity : DaggerAppCompatActivity() {
             emptyView.visible(newState.emptyView)
             progress.visible(newState.emptyProgress)
             refresh.isRefreshing = newState.refreshProgress
-            newState.pageProgress
+
             refresh.visible(newState.showData)
 
             if (newState.showData && lastState?.data != newState.data) {
@@ -89,8 +90,7 @@ class PhotosActivity : DaggerAppCompatActivity() {
             R.string.error
         }
         snackbar = Snackbar.make(coordinator, message, Snackbar.LENGTH_INDEFINITE)
-            .setAction(R.string.retry) { action.invoke() }
-        snackbar?.show()
+            .setAction(R.string.retry) { action.invoke() }.apply { show() }
     }
 
 }

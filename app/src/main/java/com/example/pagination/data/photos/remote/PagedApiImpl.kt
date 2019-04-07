@@ -1,5 +1,6 @@
 package com.example.pagination.data.photos.remote
 
+import com.example.pagination.utils.page
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -10,10 +11,10 @@ class PagedApiImpl
     private val api: PhotosApi
 ) : PagedApi {
 
-    override fun fetch(page: Int): Single<List<PhotosResponse>> {
+    override fun fetch(page: Int): Single<List<PhotoResponse>> {
         return api.photos()
             .map {
-                it.subList(pageSize * (page - 1), pageSize * page)
+                return@map it.page(page, pageSize)
             }
     }
 }

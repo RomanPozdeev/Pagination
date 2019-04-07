@@ -29,5 +29,17 @@ fun Throwable.isNetworkError(): Boolean {
             || this is ConnectException
             || this is UnknownHostException
             || this is SocketTimeoutException
-            || this.cause != null && this.isNetworkError())
+            || (this.cause != null && this.cause!!.isNetworkError()))
+}
+
+fun <T> List<T>.page(page: Int, pageSize: Int): List<T> {
+    return if (pageSize * (page - 1) < this.size) {
+        if (pageSize * page > this.size) {
+            this
+        } else {
+            this.subList(pageSize * (page - 1), pageSize * page)
+        }
+    } else {
+        emptyList()
+    }
 }

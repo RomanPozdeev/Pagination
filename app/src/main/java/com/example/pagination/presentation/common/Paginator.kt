@@ -53,30 +53,28 @@ class Paginator<T>(
             )
     }
 
-    private interface State<T> {
-        fun restart() {}
-        fun refresh() {}
-        fun loadNewPage() {}
-        fun release() {}
-        fun newData(data: List<T>) {}
-        fun fail(error: Throwable) {}
+    private abstract inner class State<T> {
+        open fun restart() {}
+        open fun refresh() {}
+        open fun loadNewPage() {}
+        open fun newData(data: List<T>) {}
+        open fun fail(error: Throwable) {}
+        fun release() {
+            currentState = RELEASED()
+            disposable?.dispose()
+        }
     }
 
-    private inner class EMPTY : State<T> {
+    private inner class EMPTY : State<T>() {
 
         override fun refresh() {
             currentState = EMPTY_PROGRESS()
             viewController.showEmptyProgress(true)
             loadPage(FIRST_PAGE)
         }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposable?.dispose()
-        }
     }
 
-    private inner class EMPTY_PROGRESS : State<T> {
+    private inner class EMPTY_PROGRESS : State<T>() {
 
         override fun restart() {
             loadPage(FIRST_PAGE)
@@ -102,14 +100,9 @@ class Paginator<T>(
             viewController.showEmptyProgress(false)
             viewController.processEmptyError(true, error)
         }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposable?.dispose()
-        }
     }
 
-    private inner class EMPTY_ERROR : State<T> {
+    private inner class EMPTY_ERROR : State<T>() {
 
         override fun restart() {
             currentState = EMPTY_PROGRESS()
@@ -124,14 +117,9 @@ class Paginator<T>(
             viewController.showEmptyProgress(true)
             loadPage(FIRST_PAGE)
         }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposable?.dispose()
-        }
     }
 
-    private inner class EMPTY_DATA : State<T> {
+    private inner class EMPTY_DATA : State<T>() {
 
         override fun restart() {
             currentState = EMPTY_PROGRESS()
@@ -146,14 +134,9 @@ class Paginator<T>(
             viewController.showEmptyProgress(true)
             loadPage(FIRST_PAGE)
         }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposable?.dispose()
-        }
     }
 
-    private inner class DATA : State<T> {
+    private inner class DATA : State<T>() {
 
         override fun restart() {
             currentState = EMPTY_PROGRESS()
@@ -173,14 +156,9 @@ class Paginator<T>(
             viewController.showPageProgress(true)
             loadPage(currentPage + 1)
         }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposable?.dispose()
-        }
     }
 
-    private inner class REFRESH : State<T> {
+    private inner class REFRESH : State<T>() {
 
         override fun restart() {
             currentState = EMPTY_PROGRESS()
@@ -212,14 +190,9 @@ class Paginator<T>(
             viewController.showRefreshProgress(false)
             viewController.processError(error)
         }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposable?.dispose()
-        }
     }
 
-    private inner class PAGE_PROGRESS : State<T> {
+    private inner class PAGE_PROGRESS : State<T>() {
 
         override fun restart() {
             currentState = EMPTY_PROGRESS()
@@ -254,14 +227,9 @@ class Paginator<T>(
             viewController.showPageProgress(false)
             viewController.processError(error)
         }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposable?.dispose()
-        }
     }
 
-    private inner class ALL_DATA : State<T> {
+    private inner class ALL_DATA : State<T>() {
 
         override fun restart() {
             currentState = EMPTY_PROGRESS()
@@ -275,14 +243,9 @@ class Paginator<T>(
             viewController.showRefreshProgress(true)
             loadPage(FIRST_PAGE)
         }
-
-        override fun release() {
-            currentState = RELEASED()
-            disposable?.dispose()
-        }
     }
 
-    private inner class RELEASED : State<T>
+    private inner class RELEASED : State<T>()
 
     companion object {
         const val FIRST_PAGE = 1

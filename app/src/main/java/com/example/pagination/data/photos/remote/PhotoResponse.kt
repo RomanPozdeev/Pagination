@@ -2,7 +2,7 @@ package com.example.pagination.data.photos.remote
 
 import com.google.gson.annotations.SerializedName
 
-data class PhotosResponse(
+data class PhotoResponse(
     @SerializedName("albumId")
     val albumId: Long,
     @SerializedName("id")

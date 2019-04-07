@@ -18,9 +18,9 @@ abstract class EndlessRecyclerViewScrollListener(layoutManager: LinearLayoutMana
     // Sets the starting page index
     private val startingPageIndex = 0
 
-    internal var mLayoutManager: RecyclerView.LayoutManager = layoutManager
+    private var layoutManager: RecyclerView.LayoutManager = layoutManager
 
-    fun getLastVisibleItem(lastVisibleItemPositions: IntArray): Int {
+    private fun getLastVisibleItem(lastVisibleItemPositions: IntArray): Int {
         var maxSize = 0
         for (i in lastVisibleItemPositions.indices) {
             if (i == 0) {
@@ -37,18 +37,31 @@ abstract class EndlessRecyclerViewScrollListener(layoutManager: LinearLayoutMana
     // but first we check if we are waiting for the previous load to finish.
     override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
         var lastVisibleItemPosition = 0
-        val totalItemCount = mLayoutManager.itemCount
+        val totalItemCount = layoutManager.itemCount
 
-        if (mLayoutManager is StaggeredGridLayoutManager) {
-            val lastVisibleItemPositions =
-                (mLayoutManager as StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
-            // get maximum element within the list
-            lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions)
-        } else if (mLayoutManager is GridLayoutManager) {
-            lastVisibleItemPosition = (mLayoutManager as GridLayoutManager).findLastVisibleItemPosition()
-        } else if (mLayoutManager is LinearLayoutManager) {
-            lastVisibleItemPosition = (mLayoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+        when (layoutManager) {
+            is StaggeredGridLayoutManager -> {
+                val lastVisibleItemPositions =
+                    (layoutManager as StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
+                // get maximum element within the list
+                lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions)
+            }
+            is GridLayoutManager -> lastVisibleItemPosition =
+                (layoutManager as GridLayoutManager).findLastVisibleItemPosition()
+            is LinearLayoutManager -> lastVisibleItemPosition =
+                (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
         }
+
+        // If the total item count is zero and the previous isn't, assume the
+        // list is invalidated and should be restart back to initial state
+        // If it’s still loading, we check to see if the dataset count has
+        // changed, if so we conclude it has finished loading and update the current page
+        // number and total item count.
+
+        // If it isn’t currently loading, we check to see if we have breached
+        // the visibleThreshold and need to reload more data.
+        // If we do need to reload some more data, we execute onLoadMore to fetch the data.
+        // threshold should reflect how many total columns there are too
 
         // If the total item count is zero and the previous isn't, assume the
         // list is invalidated and should be restart back to initial state

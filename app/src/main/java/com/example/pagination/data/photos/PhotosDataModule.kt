@@ -1,10 +1,13 @@
 package com.example.pagination.data.photos
 
+import com.example.pagination.BuildConfig
+import com.example.pagination.data.photos.local.PhotosStorage
 import com.example.pagination.data.photos.local.PhotosStorageModule
+import com.example.pagination.data.photos.remote.PagedApi
 import com.example.pagination.data.photos.remote.PhotosApiModule
 import com.example.pagination.domain.photos.PhotosRepository
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import javax.inject.Singleton
 
 @Module(
@@ -13,8 +16,10 @@ import javax.inject.Singleton
         PhotosApiModule::class
     ]
 )
-interface PhotosDataModule {
-    @Binds
+class PhotosDataModule {
+    @Provides
     @Singleton
-    fun bind(impl: PhotosRepositoryImpl): PhotosRepository
+    fun providePhotosRepository(api: PagedApi, storage: PhotosStorage): PhotosRepository {
+        return PhotosRepositoryImpl(BuildConfig.PAGE_SIZE, api, storage)
+    }
 }

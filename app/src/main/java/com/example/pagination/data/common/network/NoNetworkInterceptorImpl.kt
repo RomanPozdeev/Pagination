@@ -10,7 +10,7 @@ import javax.inject.Inject
 class NoNetworkInterceptorImpl @Inject constructor(private val context: Context) : NoNetworkInterceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!isNetworkAvailable()) {
-            throw NoInternetException()
+            throw NoInternetException
         }
 
         return chain.proceed(chain.request())

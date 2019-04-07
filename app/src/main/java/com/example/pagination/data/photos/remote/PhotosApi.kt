@@ -5,5 +5,5 @@ import retrofit2.http.GET
 
 interface PhotosApi {
     @GET("/photos")
-    fun photos(): Single<List<PhotosResponse>>
+    fun photos(): Single<List<PhotoResponse>>
 }

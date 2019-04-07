@@ -2,6 +2,21 @@
 
 buildscript {
     ext.kotlin_version = '1.3.21'
+    ext.support_version = '28.0.0'
+    ext.retrofit_version = '2.4.0'
+    ext.http_logger_version = '3.11.0'
+    ext.rxjava_version = '2.2.8'
+    ext.rxandroid_version = '2.1.1'
+    ext.dagger_version = '2.20'
+    ext.glide_version = '4.9.0'
+    ext.lifecycle_version = '1.1.1'
+    ext.room_version = '1.1.1'
+    ext.assertj_version = '3.11.1'
+    ext.old_assertj_version ='2.9.1'
+    ext.junit_version='4.12'
+    ext.runner_version='1.0.2'
+    ext.esspresso_version='3.0.2'
+
     repositories {
         google()
         jcenter()

@@ -7,9 +7,11 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 apply plugin: 'org.jetbrains.kotlin.android.extensions'
+
 androidExtensions {
     experimental = true
 }
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -28,43 +30,48 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
+    implementation "com.android.support:appcompat-v7:$support_version"
+    implementation "com.android.support:recyclerview-v7:$support_version"
+    implementation "com.android.support:design:$support_version"
 
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$http_logger_version"
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
 
-    implementation 'com.google.dagger:dagger-android:2.20'
-    implementation 'com.google.dagger:dagger-android-support:2.20'
-    kapt 'com.google.dagger:dagger-compiler:2.20'
-    kapt 'com.google.dagger:dagger-android-processor:2.20'
+    implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 
-    def lifecycle_version = "1.1.1"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     implementation "android.arch.lifecycle:runtime:$lifecycle_version"
     implementation "android.arch.lifecycle:reactivestreams:$lifecycle_version"
     testImplementation "android.arch.core:core-testing:$lifecycle_version"
 
-    def room_version = "1.1.1"
     implementation "android.arch.persistence.room:runtime:$room_version"
     kapt "android.arch.persistence.room:compiler:$room_version"
     testImplementation "android.arch.persistence.room:testing:$room_version"
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation "org.assertj:assertj-core:$assertj_version"
+    testImplementation "junit:junit:$junit_version"
+
+    //noinspection GradleDependency
+    androidTestImplementation "org.assertj:assertj-core:$old_assertj_version"
+    androidTestImplementation "com.android.support.test:runner:$runner_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$esspresso_version"
 }

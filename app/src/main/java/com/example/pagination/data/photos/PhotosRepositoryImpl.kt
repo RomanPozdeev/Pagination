@@ -1,6 +1,5 @@
 package com.example.pagination.data.photos
 
-import com.example.pagination.BuildConfig
 import com.example.pagination.data.photos.local.PhotosStorage
 import com.example.pagination.data.photos.remote.PagedApi
 import com.example.pagination.domain.photos.Photo
@@ -10,6 +9,7 @@ import javax.inject.Inject
 
 class PhotosRepositoryImpl
 @Inject constructor(
+    private val pageSize: Int,
     private val api: PagedApi,
     private val storage: PhotosStorage
 ) : PhotosRepository {
@@ -17,7 +17,7 @@ class PhotosRepositoryImpl
     override fun fetch(page: Int): Single<List<Photo>> {
         return storage.fetch(page)
             .flatMap { local ->
-                return@flatMap if (local.size < BuildConfig.PAGE_SIZE) {
+                return@flatMap if (local.size < pageSize) {
                     fetchFromRemote(page)
                         .doOnSuccess { storage.saveBlocking(it) }
                 } else {
@@ -30,7 +30,13 @@ class PhotosRepositoryImpl
         return api.fetch(page)
             .map { list ->
                 list.map {
-                    Photo(it.albumId, it.id, it.title, it.thumbnailUrl, it.url)
+                    Photo(
+                        albumId = it.albumId,
+                        id = it.id,
+                        title = it.title,
+                        thumbnailUrl = it.thumbnailUrl,
+                        url = it.url
+                    )
                 }
             }
     }

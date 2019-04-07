@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.pagination.R
 import com.example.pagination.domain.photos.Photo
 import kotlinx.android.extensions.LayoutContainer
@@ -28,7 +29,7 @@ class PhotosAdapter : RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder>() {
     fun update(photos: List<Photo>) {
         val oldSize = this.photos.size
         this.photos = photos
-        //список у нас только дополняется
+        //список у нас только дополняется, поэтому нет смысла использовать diff utils
         notifyItemRangeInserted(oldSize, photos.size)
     }
 
@@ -41,6 +42,8 @@ class PhotosAdapter : RecyclerView.Adapter<PhotosAdapter.PhotoViewHolder>() {
 
             Glide.with(containerView)
                 .load(photo.thumbnailUrl)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
                 .into(image)
         }
 
